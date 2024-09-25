@@ -1,0 +1,38 @@
+package com.example.demo.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api")
+public class MyController {
+
+    // Maps to GET requests at /api/hello
+    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    public String sayHello() {
+        return "Hello, World!";
+    }
+
+    // Maps to POST requests at /api/submit
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    public String submitData(@RequestParam String data) {
+        return "Data submitted: " + data;
+    }
+
+    // Maps to GET requests at /api/items/{id}
+    @RequestMapping(value = "/items/{id}", method = RequestMethod.GET)
+    public String getItem(@PathVariable int id) {
+        return "Item ID: " + id;
+    }
+
+    // Maps to PUT requests at /api/items/{id}
+    @RequestMapping(value = "/items/{id}", method = RequestMethod.PUT)
+    public String updateItem(@PathVariable int id, @RequestBody String itemDetails) {
+        return "Updated item ID: " + id + " with details: " + itemDetails;
+    }
+
+    // Maps to DELETE requests at /api/items/{id}
+    @RequestMapping(value = "/items/{id}", method = RequestMethod.DELETE)
+    public String deleteItem(@PathVariable int id) {
+        return "Deleted item ID: " + id;
+    }
+}
