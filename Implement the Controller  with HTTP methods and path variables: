@@ -1,0 +1,68 @@
+package com.example.demo.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+    private Map<Integer, String> productRepository = new HashMap<>();
+
+    // Initialize with some data
+    public ProductController() {
+        productRepository.put(1, "Laptop");
+        productRepository.put(2, "Smartphone");
+        productRepository.put(3, "Tablet");
+    }
+
+    // Maps to GET requests at /products
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Map<Integer, String>> listProducts() {
+        return new ResponseEntity<>(productRepository, HttpStatus.OK);
+    }
+
+    // Maps to GET requests at /products/{id}
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<String> getProduct(@PathVariable Integer id) {
+        String product = productRepository.get(id);
+        if (product != null) {
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Maps to POST requests at /products
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<String> addProduct(@RequestParam String name) {
+        int id = productRepository.size() + 1;
+        productRepository.put(id, name);
+        return new ResponseEntity<>("Product added with ID: " + id, HttpStatus.CREATED);
+    }
+
+    // Maps to PATCH requests at /products/{id}
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
+    public ResponseEntity<String> updateProduct(@PathVariable Integer id, @RequestParam String name) {
+        if (productRepository.containsKey(id)) {
+            productRepository.put(id, name);
+            return new ResponseEntity<>("Product updated", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Maps to DELETE requests at /products/{id}
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteProduct(@PathVariable Integer id) {
+        if (productRepository.remove(id) != null) {
+            return new ResponseEntity<>("Product deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+        }
+    }
+}
